@@ -1,12 +1,12 @@
 <?php
 
-use App\Http\Controllers\API\Auth\AuthenticatedSessionController;
-use App\Http\Controllers\API\Auth\ProfileController;
-use App\Http\Controllers\API\Auth\RegisteredUserController;
-use App\Http\Controllers\API\GoalController;
-use App\Http\Controllers\API\PostController;
-use App\Http\Controllers\API\UserController;
-use App\Http\Controllers\API\TagController;
+use App\Http\Controllers\Api\Auth\AuthenticatedSessionController;
+use App\Http\Controllers\Api\Auth\ProfileController;
+use App\Http\Controllers\Api\Auth\RegisteredUserController;
+use App\Http\Controllers\Api\GoalController;
+use App\Http\Controllers\Api\PostController;
+use App\Http\Controllers\Api\UserController;
+use App\Http\Controllers\Api\TagController;
 use Illuminate\Support\Facades\Route;
 
 Route::post('/register', [RegisteredUserController::class, 'store']);

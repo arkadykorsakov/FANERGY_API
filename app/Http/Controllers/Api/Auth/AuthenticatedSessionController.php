@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\API\Auth;
+namespace App\Http\Controllers\Api\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\LoginRequest;
@@ -13,11 +13,10 @@ use Illuminate\Validation\ValidationException;
 
 class AuthenticatedSessionController extends Controller
 {
-    private AuthService $authService;
 
-    public function __construct(AuthService $authService)
+
+    public function __construct(private AuthService $authService)
     {
-        $this->authService = $authService;
     }
 
     /**

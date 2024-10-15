@@ -13,17 +13,13 @@ use Illuminate\Validation\ValidationException;
 
 class AuthService
 {
-    private UserRepositoryInterface $userRepository;
-
-    public function __construct(UserRepositoryInterface $userRepository)
+    public function __construct(private UserRepositoryInterface $userRepository)
     {
-        $this->userRepository = $userRepository;
     }
 
     public function register(RegisterRequest $request): User
     {
-        $data = $request->validated();
-        return $this->userRepository->create($data)->refresh();
+        return $this->userRepository->create($request->validated());
     }
 
     /**
@@ -42,20 +38,19 @@ class AuthService
     {
         $data = $request->validated();
         $user = $request->user();
-        $user = $this->authenticate($user['email'], $data['current_password']);
-        return $this->userRepository->update($user, $data)->refresh();
+        $this->authenticate($user['email'], $data['current_password']);
+        unset($data['current_password']);
+        return $this->userRepository->update($user, $data);
     }
 
     public function deleteProfile(Request $request): bool
     {
-        $user = $request->user();
-        return $this->userRepository->delete($user);
+        return $this->userRepository->delete($request->user());
     }
 
-    public function deleteTokens(Request $request)
+    public function deleteTokens(Request $request): int
     {
-        $user = $request->user();
-        return $user->tokens()->delete();
+        return $this->userRepository->deleteTokens($request->user());
     }
 
     /**

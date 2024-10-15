@@ -14,9 +14,7 @@ class GoalRepository implements GoalRepositoryInterface
 
     public function create(array $data): Goal
     {
-        $goal = Goal::create($data);
-        $goal->refresh();
-        return $goal;
+        return Goal::create($data)->refresh();
     }
 
     public function update(Goal $goal, array $data): Goal

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\API\Auth;
+namespace App\Http\Controllers\Api\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\RegisterRequest;
@@ -12,11 +12,8 @@ use Illuminate\Http\Response;
 
 class RegisteredUserController extends Controller
 {
-	private AuthService $authService;
-
-	public function __construct(AuthService $authService)
+	public function __construct(private AuthService $authService)
 	{
-		$this->authService = $authService;
 	}
 
 	public function store(RegisterRequest $request): \Illuminate\Http\JsonResponse

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\API;
+namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Goal\StoreRequest;
@@ -12,11 +12,8 @@ use Illuminate\Support\Facades\Gate;
 
 class GoalController extends Controller
 {
-	private GoalService $goalService;
-
-	public function __construct(GoalService $goalService)
+	public function __construct(private GoalService $goalService)
 	{
-		$this->goalService = $goalService;
 	}
 
 	public function index(): \Illuminate\Http\JsonResponse

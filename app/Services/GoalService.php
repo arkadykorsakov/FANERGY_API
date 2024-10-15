@@ -24,15 +24,12 @@ class GoalService
 
     public function createGoal(StoreRequest $request): Goal
     {
-        $data = $request->validated();
-        $data['user_id'] = $request->user()->id;
-        return $this->goalRepository->create($data);
+        return $this->goalRepository->create(array_merge($request->validated(), ['user_id' => $request->user()->id]));
     }
 
     public function updateGoal(Goal $goal, UpdateRequest $request): Goal
     {
-        $data = $request->validated();
-        return $this->goalRepository->update($goal, $data);
+        return $this->goalRepository->update($goal, $request->validated());
     }
 
     public function deleteGoal(Goal $goal): bool

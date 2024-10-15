@@ -6,11 +6,8 @@ use App\Repositories\Interfaces\UserRepositoryInterface;
 
 class UserService
 {
-    private UserRepositoryInterface $userRepository;
-
-    public function __construct(UserRepositoryInterface $userRepository)
+    public function __construct(private UserRepositoryInterface $userRepository)
     {
-        $this->userRepository = $userRepository;
     }
 
     public function getPostsPaginatedByUser(string $value, string $column = 'id', int $perPage = 10): \Illuminate\Contracts\Pagination\LengthAwarePaginator

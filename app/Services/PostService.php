@@ -10,44 +10,38 @@ use App\Repositories\PostRepository;
 
 class PostService
 {
-	private postRepository $postRepository;
+    public function __construct(private postRepository $postRepository)
+    {
+    }
 
-	public function __construct(PostRepositoryInterface $postRepository)
-	{
-		$this->postRepository = $postRepository;
-	}
+    public function getPosts(): \Illuminate\Database\Eloquent\Collection
+    {
+        return $this->postRepository->getAll();
+    }
 
-	public function getPosts(): \Illuminate\Database\Eloquent\Collection
-	{
-		return $this->postRepository->getAll();
-	}
-
-	public function createPost(StoreRequest $request): Post
-	{
-		$data = $request->validated();
+    public function createPost(StoreRequest $request): Post
+    {
+        $data = $request->validated();
         $data['user_id'] = $request->user()->id;
-		$tags = $data['tags'];
-		unset($data['tags']);
-		$post = $this->postRepository->create($data);
-		$this->postRepository->attachTags($post, $tags);
-		return $post;
-	}
+        $tags = $data['tags'];
+        unset($data['tags']);
+        $post = $this->postRepository->create($data);
+        $this->postRepository->attachTags($post, $tags);
+        return $post;
+    }
 
-	public function updatePost(Post $post, UpdateRequest $request): Post
-	{
-		$data = $request->validated();
-		$tags = [];
-		if (isset($data['tags'])) {
-			$tags = $data['tags'];
-			unset($data['tags']);
-		}
-		$post = $this->postRepository->update($post, $data);
-		$this->postRepository->syncTags($post, $tags);
-		return $post;
-	}
+    public function updatePost(Post $post, UpdateRequest $request): Post
+    {
+        $data = $request->validated();
+        $tags = $data['tags'] ?? [];
+        unset($data['tags']);
+        $post = $this->postRepository->update($post, $data);
+        $this->postRepository->syncTags($post, $tags);
+        return $post;
+    }
 
-	public function deletePost(Post $post): bool
-	{
-		return $this->postRepository->delete($post);
-	}
+    public function deletePost(Post $post): bool
+    {
+        return $this->postRepository->delete($post);
+    }
 }
