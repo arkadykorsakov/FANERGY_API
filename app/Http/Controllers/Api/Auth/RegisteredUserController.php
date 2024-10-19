@@ -9,6 +9,9 @@ use App\Services\AuthService;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Spatie\MediaLibrary\MediaCollections\Exceptions\FileDoesNotExist;
+use Spatie\MediaLibrary\MediaCollections\Exceptions\FileIsTooBig;
+use Throwable;
 
 class RegisteredUserController extends Controller
 {
@@ -16,7 +19,12 @@ class RegisteredUserController extends Controller
 	{
 	}
 
-	public function store(RegisterRequest $request): \Illuminate\Http\JsonResponse
+    /**
+     * @throws Throwable
+     * @throws FileDoesNotExist
+     * @throws FileIsTooBig
+     */
+    public function store(RegisterRequest $request): \Illuminate\Http\JsonResponse
 	{
 		$user = $this->authService->register($request);
 
@@ -24,7 +32,7 @@ class RegisteredUserController extends Controller
 
 		return response()->json([
 			'user' => ProfileResource::make($user),
-			'token' => $user->createToken(env('TOKEN'))->plainTextToken,
+			'token' => $user->createToken('TOKEN')->plainTextToken,
 		], Response::HTTP_CREATED);
 	}
 

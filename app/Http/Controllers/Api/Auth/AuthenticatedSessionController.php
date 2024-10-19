@@ -25,8 +25,7 @@ class AuthenticatedSessionController extends Controller
     public function store(LoginRequest $request): JsonResponse
     {
         $user = $this->authService->login($request);
-
-        return response()->json(['user' => ProfileResource::make($user), 'token' => $user->createToken(env('TOKEN'))->plainTextToken]);
+        return response()->json(['user' => ProfileResource::make($user), 'token' => $user->createToken('TOKEN')->plainTextToken]);
     }
 
     public function destroy(Request $request): Response

@@ -4,7 +4,6 @@ namespace App\Providers;
 
 use App\Policies\GoalPolicy;
 use App\Policies\PostPolicy;
-use App\Policies\UserPolicy;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\ServiceProvider;
 
@@ -27,5 +26,7 @@ class AppServiceProvider extends ServiceProvider
         Gate::define('delete-post', [PostPolicy::class, 'delete']);
         Gate::define('update-goal', [GoalPolicy::class, 'update']);
         Gate::define('delete-goal', [GoalPolicy::class, 'delete']);
+        Gate::define('add-repost-post', [PostPolicy::class, 'addRepost']);
+        Gate::define('delete-repost-post', [PostPolicy::class, 'deleteRepost']);
     }
 }

@@ -15,13 +15,20 @@ Route::post('/login', [AuthenticatedSessionController::class, 'store']);
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('/me', [ProfileController::class, 'show']);
     Route::post('/logout', [AuthenticatedSessionController::class, 'destroy']);
-    Route::put('/update-account', [ProfileController::class, 'update']);
+    Route::put('/update-profile', [ProfileController::class, 'updateProfile']);
+    Route::put('/update-social-links', [ProfileController::class, 'updateSocialLinks']);
+    Route::put('/update-password', [ProfileController::class, 'updatePassword']);
+    Route::put('/update-avatar', [ProfileController::class, 'updateAvatar']);
     Route::delete('/delete-account', [RegisteredUserController::class, 'destroy']);
     Route::prefix('posts')->controller(PostController::class)->group(function () {
         Route::get('/', 'index');
         Route::post('/', 'store');
+        Route::get('/{post}', 'show');
         Route::put('/{post}', 'update');
         Route::delete('/{post}', 'destroy');
+        Route::post('/{post}/repost', 'addRepost');
+        Route::delete('/{post}/repost', 'deleteRepost');
+        Route::post('/{post}/like', 'toggleLike');
     });
     Route::prefix('tags')->controller(TagController::class)->group(function () {
         Route::get('/', 'index');
@@ -34,6 +41,7 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::delete('/{goal}', 'destroy');
     });
     Route::prefix('users')->controller(UserController::class)->group(function () {
+        Route::get('/{nickname}', 'show');
         Route::get('/{nickname}/posts', 'posts');
         Route::get('/{nickname}/goals', 'goals');
     });

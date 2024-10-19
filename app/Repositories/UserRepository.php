@@ -4,6 +4,9 @@ namespace App\Repositories;
 
 use App\Models\User;
 use App\Repositories\Interfaces\UserRepositoryInterface;
+use Illuminate\Http\UploadedFile;
+use Spatie\MediaLibrary\MediaCollections\Exceptions\FileDoesNotExist;
+use Spatie\MediaLibrary\MediaCollections\Exceptions\FileIsTooBig;
 
 class UserRepository implements UserRepositoryInterface
 {
@@ -47,5 +50,20 @@ class UserRepository implements UserRepositoryInterface
     public function goalsPaginated(User $user, int $perPage = 10): \Illuminate\Contracts\Pagination\LengthAwarePaginator
     {
         return $user->goals()->paginate($perPage);
+    }
+
+    /**
+     * @throws FileIsTooBig
+     * @throws FileDoesNotExist
+     */
+    public function addMedia(User $user, UploadedFile $file, string $collectionName): void
+    {
+        $user->addMedia($file)
+            ->toMediaCollection($collectionName);
+    }
+
+    public function clearMediaCollection(User $user): void
+    {
+        $user->clearMediaCollection();
     }
 }

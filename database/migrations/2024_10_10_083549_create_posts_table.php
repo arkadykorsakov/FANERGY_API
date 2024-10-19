@@ -16,6 +16,7 @@ return new class extends Migration
 			$table->string('title');
 			$table->string('description');
 			$table->string('category');
+            $table->jsonb('links')->nullable();
 			$table->foreignId('user_id')->index()->constrained('users')->onDelete('cascade');
 			$table->timestamps();
 		});

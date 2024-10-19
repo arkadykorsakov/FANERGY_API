@@ -3,10 +3,8 @@
 namespace App\Http\Requests\Profile;
 
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\Rule;
-use Propaganistas\LaravelPhone\Rules\Phone;
 
-class UpdateRequest extends FormRequest
+class UpdatePasswordRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,11 +22,8 @@ class UpdateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => 'required',
-            'email' => ['required', 'email', Rule::unique('users')->ignore($this->user())],
-            'nickname' => ['required', Rule::unique('users')->ignore($this->user())],
-            'description' => 'required',
-            'phone' => ['required', new Phone(), Rule::unique('users')->ignore($this->user())]
+            'current_password' => 'required',
+            'password' => 'required|min:8',
         ];
     }
 }

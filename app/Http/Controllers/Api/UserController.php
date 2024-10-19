@@ -5,15 +5,18 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\Goal\GoalResource;
 use App\Http\Resources\Post\PostResource;
-use App\Models\User;
-use App\Services\GoalService;
+use App\Http\Resources\User\ProfileResource;
 use App\Services\UserService;
-use Illuminate\Http\Request;
 
 class UserController extends Controller
 {
     public function __construct(private UserService $userService)
     {
+    }
+
+    public function show(string $nickname): \Illuminate\Http\JsonResponse
+    {
+        return response()->json(['user' => ProfileResource::make($this->userService->getUserByNickname($nickname))]);
     }
 
     public function posts(string $nickname): \Illuminate\Http\JsonResponse

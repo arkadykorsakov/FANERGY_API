@@ -23,4 +23,15 @@ class PostPolicy
     {
         return $user->id == $post->user_id;
     }
+
+    public function addRepost(User $user, Post $post): bool
+    {
+        return $post->user_id !== $user->id;
+    }
+
+    public function deleteRepost(User $user, Post $post): bool
+    {
+        return $post->user_id !== $user->id;
+
+    }
 }

@@ -23,11 +23,22 @@ class UpdateRequest extends FormRequest
 	 */
 	public function rules(): array
 	{
-		return [
-			'title' => 'required',
-			'description' => 'required',
-			'category' => ['required', Rule::enum(Category::class)],
-			'tags' => 'nullable|array|exists:tags,id'
-		];
+        return [
+            'title' => 'required',
+            'description' => 'required',
+            'category' => ['required', Rule::enum(Category::class)],
+            'tags' => 'nullable|array',
+            'tags.*' => 'integer|exists:tags,id',
+            'links' => 'nullable|array',
+            'links.*' => 'url',
+            'preview' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:2048',
+            'files' => 'nullable|array|max:5',
+            'files.*' => 'file|mimes:doc,docx,pdf|max:2048',
+            'audios' => 'nullable|array|max:9',
+            'audios.*' => 'file|mimes:audio/mpeg,mpga,mp3,wav,aac|max:10240',
+            'video' => 'nullable|file|mimes:mp4,mov,ogg,avi,mpg|max:10240',
+            'images' => 'nullable|array|max:9',
+            'images.*' => 'file|image|mimes:jpeg,png,jpg,gif,svg,webp|max:2048',
+        ];
 	}
 }

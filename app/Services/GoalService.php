@@ -6,7 +6,6 @@ use App\Http\Requests\Goal\StoreRequest;
 use App\Http\Requests\Goal\UpdateRequest;
 use App\Models\Goal;
 use App\Repositories\Interfaces\GoalRepositoryInterface;
-use Illuminate\Support\Facades\Gate;
 
 class GoalService
 {

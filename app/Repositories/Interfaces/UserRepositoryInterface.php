@@ -2,7 +2,9 @@
 
 namespace App\Repositories\Interfaces;
 
+use App\Models\Post;
 use App\Models\User;
+use Illuminate\Http\UploadedFile;
 
 interface UserRepositoryInterface
 {
@@ -21,4 +23,8 @@ interface UserRepositoryInterface
     public function postsPaginated(User $user, int $perPage = 10): \Illuminate\Contracts\Pagination\LengthAwarePaginator;
 
     public function goalsPaginated(User $user, int $perPage = 10): \Illuminate\Contracts\Pagination\LengthAwarePaginator;
+
+    public function addMedia(User $user, UploadedFile $file, string $collectionName): void;
+    public function clearMediaCollection(User $user): void;
+
 }
