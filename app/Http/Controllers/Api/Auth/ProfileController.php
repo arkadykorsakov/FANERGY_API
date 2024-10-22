@@ -17,8 +17,6 @@ use Throwable;
 
 class ProfileController extends Controller
 {
-
-
     public function __construct(private AuthService $authService)
     {
     }

@@ -74,22 +74,57 @@ class User extends Authenticatable implements HasMedia
         return $this->hasMany(Goal::class);
     }
 
+    public function followers(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
+    {
+        return $this->belongsToMany(User::class, 'user_subscriptions', 'following_id', 'follower_id');
+    }
+
+    public function subscribes(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
+    {
+        return $this->belongsToMany(User::class, 'user_subscriptions', 'follower_id', 'following_id');
+    }
+
+    public function getIsFollowingAttribute(): bool
+    {
+        return $this->followers()->where('follower_id', auth()->id())->exists();
+    }
+
+    public function getIsFollowedAttribute(): bool
+    {
+        return $this->followers()->where('following_id', auth()->id())->exists();
+    }
+
+    public function blocklist()
+    {
+        return $this->belongsToMany(User::class, 'user_blocklist', 'user_id', 'blocked_user_id');
+    }
+
+    public function getIsUserBlockedByMeAttribute(): bool
+    {
+        return auth()->user()->blocklist()->where('blocked_user_id', $this->id)->exists();
+    }
+
+    public function getIsMeBlockedByUserAttribute(): bool
+    {
+        return $this->blocklist()->where('blocked_user_id', auth()->id())->exists();
+    }
+
     public function registerMediaConversions(?Media $media = null): void
     {
         $this
             ->addMediaConversion('pc')
             ->format('webp')
-            ->fit(Fit::Crop,128, 128)
+            ->fit(Fit::Crop, 128, 128)
             ->nonQueued();
         $this
             ->addMediaConversion('mobile')
             ->format('webp')
-            ->fit(Fit::Crop,64, 64)
+            ->fit(Fit::Crop, 64, 64)
             ->nonQueued();
         $this
             ->addMediaConversion('mini')
             ->format('webp')
-            ->fit(Fit::Crop,34, 34)
+            ->fit(Fit::Crop, 34, 34)
             ->nonQueued();
     }
 

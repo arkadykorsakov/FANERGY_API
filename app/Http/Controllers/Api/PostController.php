@@ -8,6 +8,7 @@ use App\Http\Requests\Post\UpdateRequest;
 use App\Http\Resources\Post\PostResource;
 use App\Models\Post;
 use App\Services\Post\PostService;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Gate;
 use Throwable;
 class PostController extends Controller
@@ -34,7 +35,7 @@ class PostController extends Controller
     public function store(StoreRequest $request): \Illuminate\Http\JsonResponse
     {
         $post = $this->postService->createPost($request);
-        return response()->json(['post' => PostResource::make($post)]);
+        return response()->json(['post' => PostResource::make($post)], Response::HTTP_CREATED);
     }
 
     /**

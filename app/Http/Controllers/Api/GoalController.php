@@ -8,6 +8,7 @@ use App\Http\Requests\Goal\UpdateRequest;
 use App\Http\Resources\Goal\GoalResource;
 use App\Models\Goal;
 use App\Services\GoalService;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Gate;
 
 class GoalController extends Controller
@@ -25,7 +26,7 @@ class GoalController extends Controller
 	public function store(StoreRequest $request): \Illuminate\Http\JsonResponse
 	{
 		$goal = $this->goalService->createGoal($request);
-		return response()->json(['goal' => GoalResource::make($goal)]);
+		return response()->json(['goal' => GoalResource::make($goal)], Response::HTTP_CREATED);
 	}
 
 	public function update(UpdateRequest $request, Goal $goal): \Illuminate\Http\JsonResponse

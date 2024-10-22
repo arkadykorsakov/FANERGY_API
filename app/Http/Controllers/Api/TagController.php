@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Tag\StoreRequest;
 use App\Http\Resources\Tag\TagResource;
 use App\Services\TagService;
+use Illuminate\Http\Response;
 
 class TagController extends Controller
 {
@@ -22,6 +23,6 @@ class TagController extends Controller
     public function store(StoreRequest $request): \Illuminate\Http\JsonResponse
     {
         $tag = $this->tagService->createTag($request);
-        return response()->json(['tag' => TagResource::make($tag)]);
+        return response()->json(['tag' => TagResource::make($tag)], Response::HTTP_CREATED);
     }
 }

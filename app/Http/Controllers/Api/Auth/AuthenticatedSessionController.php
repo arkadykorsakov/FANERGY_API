@@ -13,8 +13,6 @@ use Illuminate\Validation\ValidationException;
 
 class AuthenticatedSessionController extends Controller
 {
-
-
     public function __construct(private AuthService $authService)
     {
     }

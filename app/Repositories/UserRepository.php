@@ -66,4 +66,39 @@ class UserRepository implements UserRepositoryInterface
     {
         $user->clearMediaCollection();
     }
+
+    public function subscribeToUser(User $user, int $followingId): void
+    {
+        $user->subscribes()->attach($followingId);
+    }
+
+    public function unsubscribeFromUser(User $user, int $followingId): void
+    {
+        $user->subscribes()->detach($followingId);
+    }
+
+    public function blockUser(User $user, $blockedUserId): void
+    {
+        $user->blocklist()->attach($blockedUserId);
+    }
+
+    public function unblockUser(User $user, $blockedUserId): void
+    {
+        $user->blocklist()->detach($blockedUserId);
+    }
+
+    public function isFollowing(User $user): bool
+    {
+       return $user->isFollowing;
+    }
+
+    public function isFollowed(User $user): bool
+    {
+        return $user->isFollowed;
+    }
+
+    public function isUserBlockedByMe(User $user): bool
+    {
+        return $user->isUserBlockedByMe ;
+    }
 }
