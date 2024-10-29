@@ -25,7 +25,7 @@ interface UserRepositoryInterface
 
     public function addMedia(User $user, UploadedFile $file, string $collectionName): void;
 
-    public function clearMediaCollection(User $user): void;
+    public function clearMediaCollection(User $user, string $collectionName): void;
 
     public function subscribeToUser(User $user, int $followingId): void;
 
@@ -35,9 +35,12 @@ interface UserRepositoryInterface
 
     public function unblockUser(User $user, $blockedUserId): void;
 
-    public function isFollowing(User $user): bool;
+    public function isSubscribedByAuth(User $user): bool;
 
-    public function isFollowed(User $user): bool;
+    public function isSubscribedToAuth(User $user): bool;
 
-    public function isUserBlockedByMe(User $user): bool;
+    public function isBlockedByAuth(User $user): bool;
+
+    public function findAuthUserSubscription(int $authorId);
+    public function updateSubscription($subscription, array $data): void;
 }

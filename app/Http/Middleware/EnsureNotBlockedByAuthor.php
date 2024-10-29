@@ -7,7 +7,7 @@ use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-class EnsureNotBlockedByNickname
+class EnsureNotBlockedByAuthor
 {
     /**
      * Handle an incoming request.
@@ -16,7 +16,7 @@ class EnsureNotBlockedByNickname
      */
     public function handle(Request $request, Closure $next): Response
     {
-        $user = User::where('nickname', $request->route('nickname'))->firstOrFail();
+        $user = $request->route('author');
         if ($user->hasBlockedAuthUser) {
             return response()->json(['message' => 'Forbidden.'], 403);
         }

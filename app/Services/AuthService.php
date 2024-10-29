@@ -79,7 +79,7 @@ class AuthService
         DB::beginTransaction();
         try {
             $user = $request->user();
-            $this->userRepository->clearMediaCollection($user);
+            $this->userRepository->clearMediaCollection($user, 'avatars');
             $this->userRepository->addMedia($user, $request->file('avatar'), 'avatars');
             $user->refresh();
             DB::commit();

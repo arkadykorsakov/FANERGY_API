@@ -160,4 +160,32 @@ class Post extends Model implements HasMedia
             ];
         })->toArray();
     }
+
+    //TODO: нужен рефакторинг
+    public function getIsShowContentAttribute(): bool
+    {
+        if ($this->price > 0) {
+            return $this->belongsToMany(Post::class, 'user_post_accesses', 'post_id')
+                ->wherePivot('user_id', auth()->id())
+                ->exists();
+        }
+        if ($this->subscription_level_id) {
+            $authorSubscriptionLevels = User::find($this->user_id)->subscriptionLevels()->pluck('id')->toArray();
+            $userSubscriptionLevel = auth()->user()
+                ->subscriptions()
+                ->where('author_id', $this->user_id)
+                ->pluck('subscription_level_id')
+                ->first();
+
+            $postLevelIndex = array_search($this->subscription_level_id, $authorSubscriptionLevels);
+
+            $userLevelIndex = array_search($userSubscriptionLevel, $authorSubscriptionLevels);
+
+            if ($postLevelIndex !== false && $userLevelIndex !== false) {
+                return $postLevelIndex <= $userLevelIndex;
+            }
+            return false;
+        }
+        return true;
+    }
 }

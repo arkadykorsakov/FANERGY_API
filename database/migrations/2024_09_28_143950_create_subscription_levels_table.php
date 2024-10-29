@@ -11,10 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('user_blocklists', function (Blueprint $table) {
+        Schema::create('subscription_levels', function (Blueprint $table) {
             $table->id();
+            $table->string('title');
+            $table->text('description');
+            $table->decimal('price_per_month', 10,2);
+            $table->unsignedTinyInteger('order');
             $table->foreignId('user_id')->index()->constrained('users')->onDelete('cascade');
-            $table->foreignId('blocked_user_id')->index()->constrained('users')->onDelete('cascade');
             $table->timestamps();
         });
     }
@@ -24,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('user_blocklist');
+        Schema::dropIfExists('subscription_levels');
     }
 };

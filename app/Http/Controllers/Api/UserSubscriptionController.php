@@ -3,6 +3,9 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Subscribe\BuyRequest;
+use App\Http\Requests\Subscribe\ProlongRequest;
+use App\Http\Requests\Subscribe\UpgradeRequest;
 use App\Models\User;
 use App\Services\UserSubscriptionService;
 use Illuminate\Http\Response;
@@ -14,17 +17,33 @@ class UserSubscriptionController extends Controller
     {
     }
 
-    public function subscribeToUser(User $followingUser): Response
+    public function subscribeToUser(User $author): Response
     {
-        Gate::authorize('subscribe-user', $followingUser);
-        $this->userSubscriptionService->subscribeToUser($followingUser);
+        $this->userSubscriptionService->subscribeToUser($author);
         return response()->noContent(Response::HTTP_CREATED);
     }
 
-    public function unsubscribeFromUser(User $followingUser): Response
+    public function buyLevelSubscriptionForUser(User $author, BuyRequest $request): Response
     {
-        Gate::authorize('unsubscribe-user', $followingUser);
-        $this->userSubscriptionService->unsubscribeFromUser($followingUser);
+        $this->userSubscriptionService->buyLevelSubscriptionForUser($author, $request);
+        return response()->noContent();
+    }
+
+    public function upgradeSubscriptionLevelForUser(User $author, UpgradeRequest $request): Response
+    {
+        $this->userSubscriptionService->upgradeSubscriptionLevelForUser($author, $request);
+        return response()->noContent();
+    }
+
+    public function prolongSubscriptionLevelForUser(User $author, ProlongRequest $request): Response
+    {
+        $this->userSubscriptionService->prolongSubscriptionLevelForUser($author, $request);
+        return response()->noContent();
+    }
+
+    public function unsubscribeFromUser(User $author): Response
+    {
+        $this->userSubscriptionService->unsubscribeFromUser($author);
         return response()->noContent();
     }
 }

@@ -14,6 +14,6 @@ class TagRepository implements TagRepositoryInterface
 
 	public function create(array $data): Tag
 	{
-		return Tag::create($data)->refresh();
+		return Tag::create($data)->fresh();
 	}
 }

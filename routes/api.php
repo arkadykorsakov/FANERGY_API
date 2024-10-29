@@ -9,8 +9,9 @@ use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Api\TagController;
 use App\Http\Controllers\Api\UserSubscriptionController;
 use App\Http\Controllers\Api\UserBlocklistController;
+use App\Http\Controllers\Api\UserPostAccessController;
+use App\Http\Controllers\Api\SubscriptionLevelController;
 use Illuminate\Support\Facades\Route;
-use App\Http\Middleware\EnsureNotBlockedByNickname;
 
 Route::post('/register', [RegisteredUserController::class, 'store']);
 Route::post('/login', [AuthenticatedSessionController::class, 'store']);
@@ -24,38 +25,50 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::put('/update-avatar', [ProfileController::class, 'updateAvatar']);
     Route::delete('/delete-account', [RegisteredUserController::class, 'destroy']);
     Route::prefix('posts')->controller(PostController::class)->group(function () {
-//        Route::get('/', 'index');
         Route::post('/', 'store');
         Route::get('/{post}', 'show');
         Route::put('/{post}', 'update');
+        Route::put('/{post}/subscription_level', 'updateSubscriptionLevel');
         Route::delete('/{post}', 'destroy');
         Route::post('/{post}/repost', 'addRepost');
         Route::delete('/{post}/repost', 'deleteRepost');
         Route::post('/{post}/like', 'toggleLike');
+    });
+    Route::prefix('posts')->controller(UserPostAccessController::class)->group(function () {
+        Route::post('/{post}/buy_show_access', 'buyShowAccessForPost');
     });
     Route::prefix('tags')->controller(TagController::class)->group(function () {
         Route::get('/', 'index');
         Route::post('/', 'store');
     });
     Route::prefix('goals')->controller(GoalController::class)->group(function () {
-//        Route::get('/', 'index');
         Route::post('/', 'store');
         Route::put('/{goal}', 'update');
         Route::delete('/{goal}', 'destroy');
     });
     Route::prefix('users')->group(function () {
-        Route::middleware('blocked.nickname')->controller(UserController::class)->group(function () {
+        Route::middleware('ensure.not.blocked.nickname')->controller(UserController::class)->group(function () {
             Route::get('/{nickname}', 'show');
             Route::get('/{nickname}/posts', 'posts');
             Route::get('/{nickname}/goals', 'goals');
         });
-        Route::controller(UserSubscriptionController::class)->group(function () {
-            Route::post('/{followingUser}/subscribe', 'subscribeToUser');
-            Route::delete('/{followingUser}/unsubscribe', 'unsubscribeFromUser');
+        Route::middleware(['prevent.self.subscription', 'ensure.not.blocked.author'])->controller(UserSubscriptionController::class)->group(function () {
+            Route::post('/{author}/subscribe', 'subscribeToUser');
+            Route::post('/{author}/buy_level', 'buyLevelSubscriptionForUser');
+            Route::put('/{author}/upgrade_level', 'upgradeSubscriptionLevelForUser');
+            Route::put('/{author}/prolong_level', 'prolongSubscriptionLevelForUser');
+            Route::delete('/{author}/unsubscribe', 'unsubscribeFromUser');
         });
-        Route::controller(UserBlocklistController::class)->group(function () {
+        Route::middleware('prevent.self.block')->controller(UserBlocklistController::class)->group(function () {
             Route::post('/{blockedUser}/block', 'blockUser');
             Route::delete('/{blockedUser}/unblock', 'unblockUser');
+        });
+    });
+    Route::prefix('subscription_levels')->group(function () {
+        Route::controller(SubscriptionLevelController::class)->group(function () {
+            Route::post('/', 'store');
+            Route::put('/{subscriptionLevel}', 'update');
+            Route::delete('/{subscriptionLevel}', 'destroy');
         });
     });
 });

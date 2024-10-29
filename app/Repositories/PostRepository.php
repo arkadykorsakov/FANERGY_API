@@ -12,12 +12,12 @@ class PostRepository implements PostRepositoryInterface
 {
     public function getAll(): \Illuminate\Database\Eloquent\Collection
     {
-        return Post::all();
+        return Post::with(['author', 'tags'])->withCount(['likes', 'reposts'])->get();
     }
 
     public function create(array $data): Post
     {
-        return Post::create($data)->refresh();
+        return Post::create($data)->fresh();
     }
 
     public function update(Post $post, array $data): Post
@@ -26,7 +26,6 @@ class PostRepository implements PostRepositoryInterface
         $post->refresh();
         return $post;
     }
-
     public function delete(Post $post): bool
     {
         return $post->delete();
@@ -82,6 +81,7 @@ class PostRepository implements PostRepositoryInterface
         $post->addMedia($file)
             ->toMediaCollection($collectionName);
     }
+
     public function clearMediaCollection(Post $post): void
     {
         foreach ($post->media()->pluck('collection_name')->unique() as $collection) {

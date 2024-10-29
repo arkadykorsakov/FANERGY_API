@@ -9,12 +9,13 @@ class GoalRepository implements GoalRepositoryInterface
 {
     public function getAll(): \Illuminate\Database\Eloquent\Collection
     {
-        return Goal::all();
+        return Goal::with('user')->get();
+
     }
 
     public function create(array $data): Goal
     {
-        return Goal::create($data)->refresh();
+        return Goal::create($data)->fresh();
     }
 
     public function update(Goal $goal, array $data): Goal

@@ -14,7 +14,7 @@ class UserBlocklistService
 
     public function blockUser(User $blockedUser): void
     {
-        if($this->userRepository->isUserBlockedByMe($blockedUser)){
+        if($this->userRepository->isBlockedByAuth($blockedUser)){
             throw new ConflictHttpException();
         }
         $this->userRepository->blockUser(auth()->user(), $blockedUser['id']);
@@ -22,7 +22,7 @@ class UserBlocklistService
 
     public function unblockUser(User $blockedUser): void
     {
-        if(!$this->userRepository->isUserBlockedByMe($blockedUser)){
+        if(!$this->userRepository->isBlockedByAuth($blockedUser)){
             throw new ConflictHttpException();
         }
         $this->userRepository->unblockUser(auth()->user(), $blockedUser['id']);

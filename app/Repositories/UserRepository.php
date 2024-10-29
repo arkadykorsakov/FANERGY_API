@@ -22,7 +22,7 @@ class UserRepository implements UserRepositoryInterface
 
     public function create(array $data): User
     {
-        return User::create($data)->refresh();
+        return User::create($data)->fresh();
     }
 
     public function update(User $user, array $data): User
@@ -44,12 +44,15 @@ class UserRepository implements UserRepositoryInterface
 
     public function postsPaginated(User $user, int $perPage = 10): \Illuminate\Contracts\Pagination\LengthAwarePaginator
     {
-        return $user->posts()->paginate($perPage);
+        return $user->posts()
+            ->with(['author', 'tags', 'media'])
+            ->withCount(['likes', 'reposts'])
+            ->paginate($perPage);
     }
 
     public function goalsPaginated(User $user, int $perPage = 10): \Illuminate\Contracts\Pagination\LengthAwarePaginator
     {
-        return $user->goals()->paginate($perPage);
+        return $user->goals()->with('user')->paginate($perPage);
     }
 
     /**
@@ -62,43 +65,53 @@ class UserRepository implements UserRepositoryInterface
             ->toMediaCollection($collectionName);
     }
 
-    public function clearMediaCollection(User $user): void
+    public function clearMediaCollection(User $user, string $collectionName): void
     {
-        $user->clearMediaCollection();
+        $user->clearMediaCollection($collectionName);
     }
 
     public function subscribeToUser(User $user, int $followingId): void
     {
-        $user->subscribes()->attach($followingId);
+        $user->subscriptions()->attach($followingId);
     }
 
     public function unsubscribeFromUser(User $user, int $followingId): void
     {
-        $user->subscribes()->detach($followingId);
+        $user->subscriptions()->detach($followingId);
     }
 
     public function blockUser(User $user, $blockedUserId): void
     {
-        $user->blocklist()->attach($blockedUserId);
+        $user->blockedUsers()->attach($blockedUserId);
     }
 
     public function unblockUser(User $user, $blockedUserId): void
     {
-        $user->blocklist()->detach($blockedUserId);
+        $user->blockedUsers()->detach($blockedUserId);
     }
 
-    public function isFollowing(User $user): bool
+    public function isSubscribedByAuth(User $user): bool
     {
-       return $user->isFollowing;
+        return $user->isSubscribedByAuth;
     }
 
-    public function isFollowed(User $user): bool
+    public function isSubscribedToAuth(User $user): bool
     {
-        return $user->isFollowed;
+        return $user->isSubscribedToAuth;
     }
 
-    public function isUserBlockedByMe(User $user): bool
+    public function isBlockedByAuth(User $user): bool
     {
-        return $user->isUserBlockedByMe ;
+        return $user->isBlockedByAuth;
+    }
+
+    public function findAuthUserSubscription(int $authorId)
+    {
+        return auth()->user()->subscriptions()->where('author_id', $authorId)->first()?->pivot;
+    }
+
+    public function updateSubscription($subscription, array $data): void
+    {
+        $subscription->update($data);
     }
 }

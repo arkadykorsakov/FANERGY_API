@@ -35,6 +35,7 @@ class PostResource extends JsonResource
             'video' => $this->video,
             'gallery' => $this->gallery,
             'files' => $this->files,
+            'is_show_content' => $this->isShowContent
         ];
     }
 }
