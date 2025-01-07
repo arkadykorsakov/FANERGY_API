@@ -11,14 +11,10 @@ return new class extends Migration
 	 */
 	public function up(): void
 	{
-		Schema::create('posts', function (Blueprint $table) {
+		Schema::create('post_subscription_levels', function (Blueprint $table) {
 			$table->id();
-			$table->string('title');
-			$table->string('description');
-			$table->string('category');
-			$table->jsonb('links')->nullable();
-			$table->foreignId('user_id')->index()->constrained('users')->onDelete('cascade');
-            $table->decimal('price', 10,2)->default(0);
+			$table->foreignId('post_id')->constrained('posts')->onDelete('cascade');
+			$table->foreignId('subscription_level_id')->constrained('subscription_levels')->onDelete('cascade');
 			$table->timestamps();
 		});
 	}
@@ -28,6 +24,6 @@ return new class extends Migration
 	 */
 	public function down(): void
 	{
-		Schema::dropIfExists('posts');
+		Schema::dropIfExists('post_subscription_levels');
 	}
 };

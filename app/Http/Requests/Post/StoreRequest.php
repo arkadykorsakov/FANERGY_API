@@ -39,7 +39,7 @@ class StoreRequest extends FormRequest
             'video' => 'nullable|file|mimes:mp4,mov,ogg,avi,mpg|max:10240',
             'images' => 'nullable|array|max:9',
             'images.*' => 'file|image|mimes:jpeg,png,jpg,gif,svg,webp|max:2048',
-            'access_level_id'=>'nullable|integer|exists:access_levels,id',
+            'subscription_level_id'=>'nullable|integer|exists:subscription_levels,id',
         ];
     }
 }

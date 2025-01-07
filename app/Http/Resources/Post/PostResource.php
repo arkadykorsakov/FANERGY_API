@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources\Post;
 
+use App\Http\Resources\SubscriptionLevel\SubscriptionLevelResource;
 use App\Http\Resources\Tag\TagResource;
 use App\Http\Resources\User\UserResource;
 use Illuminate\Http\Request;
@@ -35,7 +36,7 @@ class PostResource extends JsonResource
             'video' => $this->video,
             'gallery' => $this->gallery,
             'files' => $this->files,
-            'is_show_content' => $this->isShowContent
+            'is_show' => $this->isShowContent
         ];
     }
 }

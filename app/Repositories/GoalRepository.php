@@ -10,7 +10,6 @@ class GoalRepository implements GoalRepositoryInterface
     public function getAll(): \Illuminate\Database\Eloquent\Collection
     {
         return Goal::with('user')->get();
-
     }
 
     public function create(array $data): Goal

@@ -41,6 +41,16 @@ class PostRepository implements PostRepositoryInterface
         $post->tags()->sync($tags);
     }
 
+    public function attachLevels(Post $post, array $levels): void
+    {
+        $post->levels()->attach($levels);
+    }
+
+    public function syncLevels(Post $post, array $levels): void
+    {
+        $post->levels()->sync($levels);
+    }
+
     public function attachLike(Post $post, int $userId): void
     {
         $post->likes()->attach($userId);

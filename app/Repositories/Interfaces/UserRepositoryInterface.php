@@ -3,6 +3,7 @@
 namespace App\Repositories\Interfaces;
 
 use App\Models\User;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Http\UploadedFile;
 
 interface UserRepositoryInterface
@@ -23,6 +24,8 @@ interface UserRepositoryInterface
 
     public function goalsPaginated(User $user, int $perPage = 10): \Illuminate\Contracts\Pagination\LengthAwarePaginator;
 
+    public function billings(User $user): \Illuminate\Database\Eloquent\Collection;
+
     public function addMedia(User $user, UploadedFile $file, string $collectionName): void;
 
     public function clearMediaCollection(User $user, string $collectionName): void;
@@ -40,7 +43,4 @@ interface UserRepositoryInterface
     public function isSubscribedToAuth(User $user): bool;
 
     public function isBlockedByAuth(User $user): bool;
-
-    public function findAuthUserSubscription(int $authorId);
-    public function updateSubscription($subscription, array $data): void;
 }

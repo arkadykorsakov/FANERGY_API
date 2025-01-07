@@ -14,6 +14,7 @@ return new class extends Migration {
         Schema::create('users', function (Blueprint $table) {
             $table->id();
             $table->string('name');
+            $table->date('date_birth');
             $table->string('nickname')->unique();
             $table->string('email')->unique();
             $table->string('phone')->unique();
@@ -22,6 +23,7 @@ return new class extends Migration {
             $table->string('twitch_link')->nullable();
             $table->string('vk_link')->nullable();
             $table->string('inst_link')->nullable();
+            $table->string('tiktok_link')->nullable();
             $table->text('description');
             $table->string('role')->default(Role::USER);
             $table->timestamp('email_verified_at')->nullable();

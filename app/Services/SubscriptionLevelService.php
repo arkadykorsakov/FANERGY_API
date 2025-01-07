@@ -26,7 +26,7 @@ class SubscriptionLevelService
 			$data = $request->validated();
 			$data['user_id'] = $request->user()->id;
 			$subscriptionLevel = $this->subscriptionLevelRepository->create($data);
-			$this->subscriptionLevelRepository->addMedia($subscriptionLevel, $request->file('image'), 'access_levels/images');
+			$this->subscriptionLevelRepository->addMedia($subscriptionLevel, $request->file('image'), 'subscription_levels/images');
 			DB::commit();
 			return $subscriptionLevel;
 		} catch (Throwable $e) {
@@ -46,8 +46,8 @@ class SubscriptionLevelService
 		try {
 			$data = $request->validated();
 			$this->subscriptionLevelRepository->update($subscriptionLevel, $data);
-			$this->subscriptionLevelRepository->clearMediaCollection($subscriptionLevel, 'access_levels/images');
-			$this->subscriptionLevelRepository->addMedia($subscriptionLevel, $request->file('image'), 'access_levels/images');
+			$this->subscriptionLevelRepository->clearMediaCollection($subscriptionLevel, 'subscription_levels/images');
+			$this->subscriptionLevelRepository->addMedia($subscriptionLevel, $request->file('image'), 'subscription_levels/images');
 			DB::commit();
 			return $subscriptionLevel;
 		} catch (Throwable $e) {

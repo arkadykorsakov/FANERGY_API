@@ -2,7 +2,10 @@
 
 namespace App\Providers;
 
+use App\Repositories\BillingRepository;
+use App\Repositories\Interfaces\BillingRepositoryInterface;
 use App\Repositories\Interfaces\UserPostAccessRepositoryInterface;
+use App\Repositories\Interfaces\UserSubscriptionRepositoryInterface;
 use App\Repositories\SubscriptionLevelRepository;
 use App\Repositories\GoalRepository;
 use App\Repositories\Interfaces\SubscriptionLevelRepositoryInterface;
@@ -14,6 +17,7 @@ use App\Repositories\PostRepository;
 use App\Repositories\TagRepository;
 use App\Repositories\UserPostAccessRepository;
 use App\Repositories\UserRepository;
+use App\Repositories\UserSubscriptionRepository;
 use Illuminate\Support\ServiceProvider;
 
 class RepositoryServiceProvider extends ServiceProvider
@@ -29,6 +33,8 @@ class RepositoryServiceProvider extends ServiceProvider
 		$this->app->bind(GoalRepositoryInterface::class, GoalRepository::class);
         $this->app->bind(SubscriptionLevelRepositoryInterface::class, SubscriptionLevelRepository::class);
         $this->app->bind(UserPostAccessRepositoryInterface::class, UserPostAccessRepository::class);
+        $this->app->bind(UserSubscriptionRepositoryInterface::class, UserSubscriptionRepository::class);
+        $this->app->bind(BillingRepositoryInterface::class, BillingRepository::class);
 	}
 
 	/**

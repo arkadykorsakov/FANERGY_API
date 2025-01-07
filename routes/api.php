@@ -3,7 +3,9 @@
 use App\Http\Controllers\Api\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Api\Auth\ProfileController;
 use App\Http\Controllers\Api\Auth\RegisteredUserController;
+use App\Http\Controllers\Api\BillingController;
 use App\Http\Controllers\Api\GoalController;
+use App\Http\Controllers\Api\MeDataController;
 use App\Http\Controllers\Api\PostController;
 use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Api\TagController;
@@ -59,16 +61,33 @@ Route::middleware('auth:sanctum')->group(function () {
             Route::put('/{author}/prolong_level', 'prolongSubscriptionLevelForUser');
             Route::delete('/{author}/unsubscribe', 'unsubscribeFromUser');
         });
+
         Route::middleware('prevent.self.block')->controller(UserBlocklistController::class)->group(function () {
             Route::post('/{blockedUser}/block', 'blockUser');
             Route::delete('/{blockedUser}/unblock', 'unblockUser');
         });
     });
+
+    Route::prefix('subscribes')->group(function () {
+        Route::controller(UserSubscriptionController::class)->group(function () {
+            Route::put('/{subscription}', 'updateSubscription');
+        });
+    });
+
     Route::prefix('subscription_levels')->group(function () {
         Route::controller(SubscriptionLevelController::class)->group(function () {
             Route::post('/', 'store');
             Route::put('/{subscriptionLevel}', 'update');
             Route::delete('/{subscriptionLevel}', 'destroy');
+        });
+    });
+
+    Route::prefix('billings')->group(function () {
+        Route::get('/me', [MeDataController::class, 'billings']);
+        Route::controller(BillingController::class)->group(function () {
+            Route::post('/', 'store');
+            Route::put('/{billing}/set-main', 'setMain');
+            Route::delete('/{billing}', 'destroy');
         });
     });
 });

@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Policies\BillingPolicy;
 use App\Policies\GoalPolicy;
 use App\Policies\PostPolicy;
 use App\Policies\UserBlocklistPolicy;
@@ -26,6 +27,8 @@ class AppServiceProvider extends ServiceProvider
 	 */
 	public function boot(): void
 	{
+        Gate::define('update-billing', [BillingPolicy::class, 'update']);
+        Gate::define('delete-billing', [BillingPolicy::class, 'delete']);
 		Gate::define('update-post', [PostPolicy::class, 'update']);
 		Gate::define('delete-post', [PostPolicy::class, 'delete']);
 		Gate::define('update-goal', [GoalPolicy::class, 'update']);

@@ -22,7 +22,7 @@ class UpdateSubscriptionLevel extends FormRequest
 	public function rules(): array
 	{
 		return [
-			'subscription_level_id' => 'nullable|integer|exists:subscription_levels,id',
+			'subscription_level_id' => 'required|integer|exists:subscription_levels,id',
 		];
 	}
 }

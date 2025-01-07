@@ -27,14 +27,6 @@ class UpdateRequest extends FormRequest
 			'description' => 'required',
 			'price_per_month' => 'required|numeric|between:0,99999999.99',
 			'image' => 'file|image|mimes:jpeg,png,jpg,gif,svg,webp|max:2048',
-            'order' => [
-                'required',
-                'integer',
-                'between:1,5',
-                Rule::unique('subscription_levels')
-                    ->ignore($this->route('subscriptionLevel')->id)
-                    ->where('user_id', auth()->id())
-            ],
 		];
 	}
 }

@@ -45,7 +45,6 @@ class Post extends Model implements HasMedia
     {
         return $this->belongsTo(User::class, 'user_id');
     }
-
     public function tags(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
     {
         return $this->belongsToMany(Tag::class);
@@ -54,6 +53,11 @@ class Post extends Model implements HasMedia
     public function likes(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
     {
         return $this->belongsToMany(User::class, 'likes_for_posts', 'post_id', 'user_id');
+    }
+
+    public function levels(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
+    {
+        return $this->belongsToMany(SubscriptionLevel::class, 'post_subscription_levels');
     }
 
     public function reposts(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
@@ -161,30 +165,25 @@ class Post extends Model implements HasMedia
         })->toArray();
     }
 
+    public function getIsPaidForViewing(): bool
+    {
+        return $this->belongsToMany(Post::class, 'user_post_accesses', 'post_id')
+            ->wherePivot('user_id', auth()->id())
+            ->exists();
+    }
+
     //TODO: нужен рефакторинг
     public function getIsShowContentAttribute(): bool
     {
         if ($this->price > 0) {
-            return $this->belongsToMany(Post::class, 'user_post_accesses', 'post_id')
-                ->wherePivot('user_id', auth()->id())
-                ->exists();
+            return $this->getIsPaidForViewing();
         }
-        if ($this->subscription_level_id) {
-            $authorSubscriptionLevels = User::find($this->user_id)->subscriptionLevels()->pluck('id')->toArray();
+        if ($this->levels()->count()) {
             $userSubscriptionLevel = auth()->user()
                 ->subscriptions()
                 ->where('author_id', $this->user_id)
-                ->pluck('subscription_level_id')
-                ->first();
-
-            $postLevelIndex = array_search($this->subscription_level_id, $authorSubscriptionLevels);
-
-            $userLevelIndex = array_search($userSubscriptionLevel, $authorSubscriptionLevels);
-
-            if ($postLevelIndex !== false && $userLevelIndex !== false) {
-                return $postLevelIndex <= $userLevelIndex;
-            }
-            return false;
+                ->value('subscription_level_id');
+            return $this->levels->contains('id', $userSubscriptionLevel);
         }
         return true;
     }

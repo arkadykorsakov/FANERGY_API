@@ -4,6 +4,7 @@ namespace App\Repositories;
 
 use App\Models\User;
 use App\Repositories\Interfaces\UserRepositoryInterface;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Http\UploadedFile;
 use Spatie\MediaLibrary\MediaCollections\Exceptions\FileDoesNotExist;
 use Spatie\MediaLibrary\MediaCollections\Exceptions\FileIsTooBig;
@@ -55,6 +56,11 @@ class UserRepository implements UserRepositoryInterface
         return $user->goals()->with('user')->paginate($perPage);
     }
 
+    public function billings(User $user): \Illuminate\Database\Eloquent\Collection
+    {
+        return $user->billings()->get();
+    }
+
     /**
      * @throws FileIsTooBig
      * @throws FileDoesNotExist
@@ -103,15 +109,5 @@ class UserRepository implements UserRepositoryInterface
     public function isBlockedByAuth(User $user): bool
     {
         return $user->isBlockedByAuth;
-    }
-
-    public function findAuthUserSubscription(int $authorId)
-    {
-        return auth()->user()->subscriptions()->where('author_id', $authorId)->first()?->pivot;
-    }
-
-    public function updateSubscription($subscription, array $data): void
-    {
-        $subscription->update($data);
     }
 }

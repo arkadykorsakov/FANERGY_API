@@ -18,7 +18,7 @@ class GoalFactory extends Factory
     public function definition(): array
     {
         return [
-            'title' => $this->faker->sentence(),
+            'title' => $this->faker->word(),
             'description' => $this->faker->text(),
             'amount_collected' => $this->faker->numberBetween(100, 1000),
             'total_collected' => $this->faker->numberBetween(1000, 100000),

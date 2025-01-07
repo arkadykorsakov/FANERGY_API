@@ -19,6 +19,10 @@ interface PostRepositoryInterface
 
     public function syncTags(Post $post, array $tags): void;
 
+    public function attachLevels(Post $post, array $levels): void;
+
+    public function syncLevels(Post $post, array $levels): void;
+
     public function attachLike(Post $post, int $userId): void;
 
     public function detachLike(Post $post, int $userId): void;

@@ -6,10 +6,11 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Subscribe\BuyRequest;
 use App\Http\Requests\Subscribe\ProlongRequest;
 use App\Http\Requests\Subscribe\UpgradeRequest;
+use App\Http\Requests\UserSubscription\UpdateRequest;
 use App\Models\User;
+use App\Models\UserSubscription;
 use App\Services\UserSubscriptionService;
 use Illuminate\Http\Response;
-use Illuminate\Support\Facades\Gate;
 
 class UserSubscriptionController extends Controller
 {
@@ -23,21 +24,25 @@ class UserSubscriptionController extends Controller
         return response()->noContent(Response::HTTP_CREATED);
     }
 
-    public function buyLevelSubscriptionForUser(User $author, BuyRequest $request): Response
+    public function buyLevelSubscriptionForUser(User $author, BuyRequest $request): \Illuminate\Http\JsonResponse
     {
-        $this->userSubscriptionService->buyLevelSubscriptionForUser($author, $request);
-        return response()->noContent();
+        return response()->json(['user_subscription' => $this->userSubscriptionService->buyLevelSubscriptionForUser($author, $request)]);
     }
 
-    public function upgradeSubscriptionLevelForUser(User $author, UpgradeRequest $request): Response
+    public function upgradeSubscriptionLevelForUser(User $author, UpgradeRequest $request): \Illuminate\Http\JsonResponse
     {
-        $this->userSubscriptionService->upgradeSubscriptionLevelForUser($author, $request);
-        return response()->noContent();
+        return response()->json(['user_subscription' => $this->userSubscriptionService->upgradeSubscriptionLevelForUser($author, $request)]);
+
     }
 
-    public function prolongSubscriptionLevelForUser(User $author, ProlongRequest $request): Response
+    public function prolongSubscriptionLevelForUser(User $author, ProlongRequest $request): \Illuminate\Http\JsonResponse
     {
-        $this->userSubscriptionService->prolongSubscriptionLevelForUser($author, $request);
+        return response()->json(['user_subscription' => $this->userSubscriptionService->prolongSubscriptionLevelForUser($author, $request)]);
+    }
+
+    public function updateSubscription(UserSubscription $subscription, UpdateRequest $request): Response
+    {
+        $this->userSubscriptionService->updateSubscription($subscription, $request);
         return response()->noContent();
     }
 

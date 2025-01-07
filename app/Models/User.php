@@ -4,6 +4,7 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 
+use App\Enums\PaymentSystem;
 use App\Enums\Role;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -68,6 +69,11 @@ class User extends Authenticatable implements HasMedia
 	{
 		return $this->hasMany(Post::class);
 	}
+
+    public function billings(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(Billing::class);
+    }
 
 	public function goals(): \Illuminate\Database\Eloquent\Relations\HasMany
 	{
@@ -146,6 +152,6 @@ class User extends Authenticatable implements HasMedia
 
     public function subscriptionLevels(): \Illuminate\Database\Eloquent\Relations\hasMany
     {
-        return $this->hasMany(SubscriptionLevel::class)->orderBy('order', 'ASC');
+        return $this->hasMany(SubscriptionLevel::class);
     }
 }
