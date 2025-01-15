@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources\Post;
 
+use App\Http\Resources\Comment\CommentResource;
 use App\Http\Resources\SubscriptionLevel\SubscriptionLevelResource;
 use App\Http\Resources\Tag\TagResource;
 use App\Http\Resources\User\UserResource;
@@ -36,7 +37,8 @@ class PostResource extends JsonResource
             'video' => $this->video,
             'gallery' => $this->gallery,
             'files' => $this->files,
-            'is_show' => $this->isShowContent
+            'is_show' => $this->isShowContent,
+            'comments' => CommentResource::collection($this->comments)
         ];
     }
 }

@@ -45,6 +45,7 @@ class Post extends Model implements HasMedia
     {
         return $this->belongsTo(User::class, 'user_id');
     }
+
     public function tags(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
     {
         return $this->belongsToMany(Tag::class);
@@ -53,6 +54,11 @@ class Post extends Model implements HasMedia
     public function likes(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
     {
         return $this->belongsToMany(User::class, 'likes_for_posts', 'post_id', 'user_id');
+    }
+
+    public function comments(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(Comment::class, 'post_id', 'id')->whereNull('parent_comment_id');
     }
 
     public function levels(): \Illuminate\Database\Eloquent\Relations\BelongsToMany

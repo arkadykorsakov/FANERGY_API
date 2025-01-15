@@ -3,7 +3,9 @@
 namespace App\Providers;
 
 use App\Repositories\BillingRepository;
+use App\Repositories\CommentRepository;
 use App\Repositories\Interfaces\BillingRepositoryInterface;
+use App\Repositories\Interfaces\CommentRepositoryInterface;
 use App\Repositories\Interfaces\UserPostAccessRepositoryInterface;
 use App\Repositories\Interfaces\UserSubscriptionRepositoryInterface;
 use App\Repositories\SubscriptionLevelRepository;
@@ -35,6 +37,7 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->bind(UserPostAccessRepositoryInterface::class, UserPostAccessRepository::class);
         $this->app->bind(UserSubscriptionRepositoryInterface::class, UserSubscriptionRepository::class);
         $this->app->bind(BillingRepositoryInterface::class, BillingRepository::class);
+        $this->app->bind(CommentRepositoryInterface::class, CommentRepository::class);
 	}
 
 	/**

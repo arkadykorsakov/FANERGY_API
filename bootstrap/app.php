@@ -31,7 +31,7 @@ return Application::configure(basePath: dirname(__DIR__))
                 return response()->json([
                     'message' => 'Такого пользователя не существует.',
                     'errors' => ['author_id' => ['Такого пользователя не существует']],
-                    'e'=>$e->getMessage()
+                    'e' => $e->getMessage()
                 ], 422);
             }
             if ($request->is('api/users/*/block') || $request->is('api/users/*/unblock')) {
@@ -63,7 +63,8 @@ return Application::configure(basePath: dirname(__DIR__))
         $exceptions->render(function (HttpException $e, Request $request) {
             if ($request->is('api/*')) {
                 return response()->json([
-                    'message' => 'Bad Request.'
+                    'message' => 'Bad Request.',
+                    'log'=>$e->getMessage()
                 ], 400);
             }
         });

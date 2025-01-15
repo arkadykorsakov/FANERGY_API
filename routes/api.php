@@ -4,6 +4,7 @@ use App\Http\Controllers\Api\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Api\Auth\ProfileController;
 use App\Http\Controllers\Api\Auth\RegisteredUserController;
 use App\Http\Controllers\Api\BillingController;
+use App\Http\Controllers\Api\CommentController;
 use App\Http\Controllers\Api\GoalController;
 use App\Http\Controllers\Api\MeDataController;
 use App\Http\Controllers\Api\PostController;
@@ -26,19 +27,28 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::put('/update-password', [ProfileController::class, 'updatePassword']);
     Route::put('/update-avatar', [ProfileController::class, 'updateAvatar']);
     Route::delete('/delete-account', [RegisteredUserController::class, 'destroy']);
-    Route::prefix('posts')->controller(PostController::class)->group(function () {
-        Route::post('/', 'store');
-        Route::get('/{post}', 'show');
-        Route::put('/{post}', 'update');
-        Route::put('/{post}/subscription_level', 'updateSubscriptionLevel');
-        Route::delete('/{post}', 'destroy');
-        Route::post('/{post}/repost', 'addRepost');
-        Route::delete('/{post}/repost', 'deleteRepost');
-        Route::post('/{post}/like', 'toggleLike');
+
+    Route::prefix('posts')->group(function () {
+        Route::controller(PostController::class)->group(function () {
+            Route::get('/', 'index');
+            Route::post('/', 'store');
+            Route::get('/{post}', 'show');
+            Route::put('/{post}', 'update');
+            Route::put('/{post}/subscription_level', 'updateSubscriptionLevel');
+            Route::delete('/{post}', 'destroy');
+            Route::post('/{post}/repost', 'addRepost');
+            Route::delete('/{post}/repost', 'deleteRepost');
+            Route::post('/{post}/like', 'toggleLike');
+        });
+        Route::controller(UserPostAccessController::class)->group(function () {
+            Route::post('/{post}/buy_show_access', 'buyShowAccessForPost');
+        });
+        Route::controller(CommentController::class)->group(function () {
+            Route::post('/{post}/add-comment', 'store');
+        });
     });
-    Route::prefix('posts')->controller(UserPostAccessController::class)->group(function () {
-        Route::post('/{post}/buy_show_access', 'buyShowAccessForPost');
-    });
+
+
     Route::prefix('tags')->controller(TagController::class)->group(function () {
         Route::get('/', 'index');
         Route::post('/', 'store');
@@ -88,6 +98,13 @@ Route::middleware('auth:sanctum')->group(function () {
             Route::post('/', 'store');
             Route::put('/{billing}/set-main', 'setMain');
             Route::delete('/{billing}', 'destroy');
+        });
+    });
+
+    Route::prefix('comments')->group(function () {
+        Route::controller(CommentController::class)->group(function () {
+            Route::put('/{comment}', 'update');
+            Route::delete('/{comment}', 'destroy');
         });
     });
 });
